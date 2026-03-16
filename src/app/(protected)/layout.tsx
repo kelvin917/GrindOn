@@ -19,7 +19,7 @@ export default async function ProtectedLayout({
   return (
     <>
       <Navbar />
-      <main className="max-w-2xl mx-auto px-4 py-6">{children}</main>
+      <main className="max-w-lg mx-auto px-4 pt-5 pb-24">{children}</main>
     </>
   );
 }
