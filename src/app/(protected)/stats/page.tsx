@@ -19,10 +19,5 @@ export default async function StatsPage() {
     .eq("user_id", user!.id)
     .order("checked_date", { ascending: true });
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">数据统计</h1>
-      <StatsView habits={habits ?? []} checkIns={checkIns ?? []} />
-    </div>
-  );
+  return <StatsView habits={habits ?? []} checkIns={checkIns ?? []} />;
 }

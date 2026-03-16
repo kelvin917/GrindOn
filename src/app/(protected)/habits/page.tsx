@@ -13,10 +13,5 @@ export default async function HabitsPage() {
     .eq("user_id", user!.id)
     .order("created_at", { ascending: true });
 
-  return (
-    <div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">习惯管理</h1>
-      <HabitList habits={habits ?? []} userId={user!.id} />
-    </div>
-  );
+  return <HabitList habits={habits ?? []} userId={user!.id} />;
 }
