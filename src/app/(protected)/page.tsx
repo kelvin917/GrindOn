@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import TodayCheckin from "@/components/TodayCheckin";
 
@@ -110,9 +111,9 @@ export default async function HomePage() {
           <p className="font-medium text-base">还没有习惯</p>
           <p className="text-sm mt-1">
             去{" "}
-            <a href="/habits" style={{ color: "var(--primary)" }} className="underline underline-offset-2">
+            <Link href="/habits" style={{ color: "var(--primary)" }} className="underline underline-offset-2">
               习惯管理
-            </a>{" "}
+            </Link>{" "}
             添加第一个吧
           </p>
         </div>
