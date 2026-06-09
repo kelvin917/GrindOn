@@ -7,11 +7,13 @@ export default async function HabitsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) return null;
+
   const { data: habits } = await supabase
     .from("habits")
     .select("*")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: true });
 
-  return <HabitList habits={habits ?? []} userId={user!.id} />;
+  return <HabitList habits={habits ?? []} userId={user.id} />;
 }

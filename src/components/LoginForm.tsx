@@ -44,25 +44,35 @@ export default function LoginForm() {
     setLoading(false);
   }
 
+  const inputStyle = {
+    borderColor: "var(--border)",
+    background: "var(--input)",
+    color: "var(--text)",
+  };
+
   return (
-    <div className="bg-white rounded-2xl p-8 border border-gray-100 shadow-sm">
-      <h2 className="text-lg font-semibold text-gray-800 mb-6">
+    <div
+      className="rounded-3xl p-8 glass glow-ring rise-in"
+      style={{ boxShadow: "0 0 0 1px rgba(126,157,255,0.18), 0 0 40px rgba(126,157,255,0.12), 0 20px 60px rgba(0,0,0,0.5)" }}
+    >
+      <h2 className="serif text-2xl mb-7" style={{ color: "var(--text)" }}>
         {isSignUp ? "注册账号" : "欢迎回来"}
       </h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm text-gray-600 mb-1.5">邮箱</label>
+          <label className="block text-sm mb-1.5" style={{ color: "var(--muted)" }}>邮箱</label>
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
             placeholder="your@email.com"
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full border rounded-xl px-4 py-2.5 text-sm outline-none transition-shadow focus:ring-2 placeholder:opacity-40"
+            style={inputStyle}
           />
         </div>
         <div>
-          <label className="block text-sm text-gray-600 mb-1.5">密码</label>
+          <label className="block text-sm mb-1.5" style={{ color: "var(--muted)" }}>密码</label>
           <input
             type="password"
             value={password}
@@ -70,17 +80,18 @@ export default function LoginForm() {
             required
             minLength={6}
             placeholder="至少 6 位"
-            className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-indigo-300"
+            className="w-full border rounded-xl px-4 py-2.5 text-sm outline-none transition-shadow focus:ring-2 placeholder:opacity-40"
+            style={inputStyle}
           />
         </div>
 
         {error && (
-          <p className="text-sm text-red-500 bg-red-50 rounded-xl px-4 py-2.5">
+          <p className="text-sm rounded-xl px-4 py-2.5" style={{ color: "var(--danger)", background: "rgba(241,122,138,0.12)" }}>
             {error}
           </p>
         )}
         {message && (
-          <p className="text-sm text-green-600 bg-green-50 rounded-xl px-4 py-2.5">
+          <p className="text-sm rounded-xl px-4 py-2.5" style={{ color: "#7fd9a8", background: "rgba(127,217,168,0.12)" }}>
             {message}
           </p>
         )}
@@ -88,13 +99,14 @@ export default function LoginForm() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-indigo-500 text-white rounded-xl py-2.5 font-medium hover:bg-indigo-600 disabled:opacity-50 transition-colors"
+          className="w-full rounded-xl py-2.5 font-semibold disabled:opacity-50 transition-all active:scale-98"
+          style={{ background: "var(--primary)", color: "#0d1320", boxShadow: "0 4px 18px rgba(126,157,255,0.3)" }}
         >
           {loading ? "处理中..." : isSignUp ? "注册" : "登录"}
         </button>
       </form>
 
-      <p className="text-center text-sm text-gray-500 mt-4">
+      <p className="text-center text-sm mt-4" style={{ color: "var(--muted)" }}>
         {isSignUp ? "已有账号？" : "没有账号？"}
         <button
           onClick={() => {
@@ -102,7 +114,8 @@ export default function LoginForm() {
             setError("");
             setMessage("");
           }}
-          className="text-indigo-500 font-medium hover:underline ml-1"
+          className="font-medium hover:underline ml-1"
+          style={{ color: "var(--primary)" }}
         >
           {isSignUp ? "去登录" : "注册"}
         </button>

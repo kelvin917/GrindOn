@@ -7,16 +7,18 @@ export default async function StatsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) return null;
+
   const { data: habits } = await supabase
     .from("habits")
     .select("*")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .order("created_at", { ascending: true });
 
   const { data: checkIns } = await supabase
     .from("check_ins")
     .select("habit_id, checked_date")
-    .eq("user_id", user!.id)
+    .eq("user_id", user.id)
     .order("checked_date", { ascending: true });
 
   return <StatsView habits={habits ?? []} checkIns={checkIns ?? []} />;

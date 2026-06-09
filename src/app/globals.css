@@ -1,20 +1,72 @@
 @import "tailwindcss";
 
+/* ── 静夜澪 · Quiet Night theme ──
+   深夜靛蓝为底，月光澪水为脉，星河微光浮于天际。
+   版式：留白做骨架，辉光做呼吸。 */
 :root {
-  --bg: #f7f5f0;
-  --card: #ffffff;
-  --text: #1a1a1a;
-  --muted: #9ca3af;
-  --primary: #6366f1;
-  --primary-light: #eef2ff;
-  --streak: #f97316;
+  --bg: #0d1320;          /* 夜空底色 */
+  --card: #161d31;        /* 卡片 · 浮于夜色之上 */
+  --surface: #1e2742;     /* 图标 / 次级表面 */
+  --text: #e8ebf7;        /* 月光白 */
+  --muted: #7e88a8;       /* 远山雾蓝 */
+  --primary: #7e9dff;     /* 澪 · 映月之水 */
+  --primary-light: #1d2950; /* 选中态底光 */
+  --streak: #f2b06a;      /* 灯火暖橙 */
+  --border: #27314f;      /* 夜色边线 */
+  --input: #10162a;       /* 输入框 · 深潭 */
+  --danger: #f17a8a;      /* 落樱红 */
+
+  /* 玻璃拟态 */
+  --glass: rgba(22, 29, 49, 0.5);
+  --glass-border: rgba(126, 157, 255, 0.12);
+  /* 衬线 · 文学气质标题 */
+  --serif: "Songti SC", "Noto Serif SC", "STSong", Georgia, "Times New Roman", serif;
 }
 
 body {
-  background: var(--bg);
+  background-color: var(--bg);
   color: var(--text);
   font-family: -apple-system, "Helvetica Neue", "PingFang SC", sans-serif;
   -webkit-font-smoothing: antialiased;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  /* 星河微光：自天际两端晕染而下 */
+  background-image:
+    radial-gradient(900px circle at 12% -8%, rgba(126, 157, 255, 0.14), transparent 55%),
+    radial-gradient(720px circle at 96% 4%, rgba(150, 130, 255, 0.10), transparent 50%),
+    radial-gradient(600px circle at 50% 120%, rgba(126, 157, 255, 0.06), transparent 60%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* ── 衬线标题 · 细体宽间距，留白美学之骨 ── */
+.serif {
+  font-family: var(--serif);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+}
+
+/* ── 玻璃拟态卡片 ── */
+.glass {
+  background: var(--glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+}
+
+/* ── 月光辉光：hover 时浮起一层光晕 ── */
+.glow-hover {
+  transition: box-shadow 0.5s ease, border-color 0.5s ease, transform 0.5s ease;
+}
+.glow-hover:hover {
+  border-color: rgba(126, 157, 255, 0.35);
+  box-shadow: 0 0 28px rgba(126, 157, 255, 0.18);
+}
+
+/* ── 持续呼吸的辉光描边 · 用于主元素 ── */
+.glow-ring {
+  box-shadow: 0 0 0 1px rgba(126, 157, 255, 0.18),
+              0 0 32px rgba(126, 157, 255, 0.12);
 }
 
 @keyframes checkPop {
@@ -22,7 +74,35 @@ body {
   40%  { transform: scale(0.95); }
   100% { transform: scale(1); }
 }
-
 .check-pop {
   animation: checkPop 0.25s ease;
+}
+
+/* 月光微亮动画 · 用于点睛之处 */
+@keyframes moonGlow {
+  0%, 100% { opacity: 0.55; filter: drop-shadow(0 0 4px rgba(126,157,255,0.4)); }
+  50%      { opacity: 1;    filter: drop-shadow(0 0 12px rgba(126,157,255,0.7)); }
+}
+.moon-glow {
+  animation: moonGlow 4s ease-in-out infinite;
+}
+
+/* 缓缓上浮入场 */
+@keyframes riseIn {
+  0%   { opacity: 0; transform: translateY(12px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.rise-in {
+  /* 用 backwards 而非 both：动画结束后不残留 transform，
+     否则会成为内部 fixed 弹窗的定位基准、导致弹窗下半截被裁。 */
+  animation: riseIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+}
+
+/* 一缕游移的星光 · 装饰用 */
+@keyframes drift {
+  0%, 100% { opacity: 0.3; transform: translateY(0); }
+  50%      { opacity: 0.8; transform: translateY(-6px); }
+}
+.drift {
+  animation: drift 6s ease-in-out infinite;
 }

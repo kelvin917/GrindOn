@@ -5,10 +5,39 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Habit } from "@/lib/types";
 
-const ICONS = ["💪", "📚", "🏃", "🧘", "💧", "🎯", "✍️", "🎨", "🌿", "⭐", "🎬", "📷"];
-const COLORS = ["#6366f1", "#ec4899", "#f59e0b", "#10b981", "#3b82f6", "#8b5cf6", "#ef4444", "#14b8a6"];
+const ICONS = [
+  "💪",
+  "📚",
+  "🏃",
+  "🧘",
+  "💧",
+  "🎯",
+  "✍️",
+  "🎨",
+  "🌿",
+  "⭐",
+  "🎬",
+  "📷",
+  "🎹",
+];
+const COLORS = [
+  "#6366f1",
+  "#ec4899",
+  "#f59e0b",
+  "#10b981",
+  "#3b82f6",
+  "#8b5cf6",
+  "#ef4444",
+  "#14b8a6",
+];
 
-export default function HabitList({ habits, userId }: { habits: Habit[]; userId: string }) {
+export default function HabitList({
+  habits,
+  userId,
+}: {
+  habits: Habit[];
+  userId: string;
+}) {
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState("");
   const [icon, setIcon] = useState(ICONS[0]);
@@ -20,9 +49,14 @@ export default function HabitList({ habits, userId }: { habits: Habit[]; userId:
     if (!name.trim()) return;
     setSaving(true);
     const supabase = createClient();
-    await supabase.from("habits").insert({ user_id: userId, name: name.trim(), icon, color });
-    setName(""); setIcon(ICONS[0]); setColor(COLORS[0]);
-    setShowForm(false); setSaving(false);
+    await supabase
+      .from("habits")
+      .insert({ user_id: userId, name: name.trim(), icon, color });
+    setName("");
+    setIcon(ICONS[0]);
+    setColor(COLORS[0]);
+    setShowForm(false);
+    setSaving(false);
     router.refresh();
   }
 
@@ -34,55 +68,68 @@ export default function HabitList({ habits, userId }: { habits: Habit[]; userId:
   }
 
   return (
-    <div>
-      <div className="mb-4">
-        <h1 className="text-2xl font-bold" style={{ color: "var(--text)" }}>习惯管理</h1>
-        <p className="text-sm mt-0.5" style={{ color: "var(--muted)" }}>长按或点击 ✕ 删除习惯</p>
+    <div className="lg:max-w-4xl rise-in">
+      <div className="mb-5 lg:mb-7">
+        <h1 className="serif text-4xl lg:text-5xl" style={{ color: "var(--text)" }}>
+          习惯
+        </h1>
+        <p className="text-xs mt-2 tracking-[0.2em] uppercase" style={{ color: "var(--muted)" }}>
+          tap ✕ to remove
+        </p>
       </div>
 
-      <div className="space-y-2.5 mb-5">
-        {habits.length === 0 && !showForm && (
-          <div className="text-center py-14" style={{ color: "var(--muted)" }}>
-            <div className="text-5xl mb-3">📋</div>
-            <p>还没有习惯，点下方添加</p>
-          </div>
-        )}
-        {habits.map((habit) => (
+      {/* Bento 习惯方块网格 */}
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 auto-rows-[124px] grid-flow-row-dense mb-6">
+        {habits.map((habit, i) => (
           <div
             key={habit.id}
-            className="flex items-center justify-between rounded-2xl px-4 py-3.5 border"
-            style={{
-              background: "var(--card)",
-              borderColor: "#f0ece4",
-              boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
-            }}
+            className={`group relative glass glow-hover rounded-3xl p-5 flex flex-col justify-between rise-in ${i % 4 === 0 ? "lg:col-span-2" : ""}`}
+            style={{ animationDelay: `${i * 60}ms`, boxShadow: `0 0 18px ${habit.color}18` }}
           >
-            <div className="flex items-center gap-3">
+            <div className="flex items-start justify-between">
               <span
-                className="w-10 h-10 text-xl flex items-center justify-center rounded-xl"
-                style={{ background: habit.color + "22" }}
+                className="w-12 h-12 text-2xl flex items-center justify-center rounded-2xl"
+                style={{ background: habit.color + "1f", boxShadow: `0 0 16px ${habit.color}33` }}
               >
                 {habit.icon}
               </span>
-              <span className="font-medium" style={{ color: "var(--text)" }}>{habit.name}</span>
+              <button
+                onClick={() => deleteHabit(habit.id)}
+                className="w-7 h-7 rounded-full flex items-center justify-center text-sm opacity-0 group-hover:opacity-60 hover:opacity-100! transition-opacity"
+                style={{ color: "var(--muted)" }}
+                aria-label="删除"
+              >
+                ✕
+              </button>
             </div>
-            <button
-              onClick={() => deleteHabit(habit.id)}
-              className="w-7 h-7 rounded-full flex items-center justify-center text-sm transition-all hover:bg-red-50"
-              style={{ color: "#d1c9c0" }}
-            >
-              ✕
-            </button>
+            <span className="text-base truncate" style={{ color: "var(--text)", fontWeight: 500 }}>
+              {habit.name}
+            </span>
           </div>
         ))}
+
+        {/* 添加方块 */}
+        {!showForm && (
+          <button
+            onClick={() => setShowForm(true)}
+            className="rounded-3xl p-5 flex flex-col items-center justify-center gap-2 transition-all glow-hover rise-in"
+            style={{
+              border: "1.5px dashed var(--glass-border)",
+              color: "var(--muted)",
+              animationDelay: `${habits.length * 60}ms`,
+            }}
+          >
+            <span className="text-3xl moon-glow" style={{ color: "var(--primary)" }}>+</span>
+            <span className="text-xs tracking-wide">添加习惯</span>
+          </button>
+        )}
       </div>
 
-      {showForm ? (
-        <div
-          className="rounded-2xl p-5 border"
-          style={{ background: "var(--card)", borderColor: "#e0d8f0", boxShadow: "0 2px 12px rgba(99,102,241,0.08)" }}
-        >
-          <h3 className="font-semibold mb-4" style={{ color: "var(--text)" }}>添加新习惯</h3>
+      {showForm && (
+        <div className="rounded-3xl p-6 glass glow-ring rise-in lg:max-w-2xl">
+          <h3 className="serif text-xl mb-5" style={{ color: "var(--text)" }}>
+            添加新习惯
+          </h3>
 
           <input
             type="text"
@@ -92,15 +139,17 @@ export default function HabitList({ habits, userId }: { habits: Habit[]; userId:
             onKeyDown={(e) => e.key === "Enter" && addHabit()}
             maxLength={20}
             autoFocus
-            className="w-full border rounded-xl px-4 py-2.5 text-sm outline-none mb-4"
+            className="w-full border rounded-xl px-4 py-2.5 text-sm outline-none mb-4 placeholder:opacity-50"
             style={{
-              borderColor: "#e5e0d8",
-              background: "#faf9f6",
+              borderColor: "var(--border)",
+              background: "var(--input)",
               color: "var(--text)",
             }}
           />
 
-          <p className="text-xs mb-2" style={{ color: "var(--muted)" }}>选择图标</p>
+          <p className="text-xs mb-2" style={{ color: "var(--muted)" }}>
+            选择图标
+          </p>
           <div className="flex gap-2 flex-wrap mb-4">
             {ICONS.map((i) => (
               <button
@@ -108,7 +157,7 @@ export default function HabitList({ habits, userId }: { habits: Habit[]; userId:
                 onClick={() => setIcon(i)}
                 className="w-9 h-9 rounded-xl text-lg transition-all"
                 style={{
-                  background: icon === i ? color + "22" : "#f5f3ef",
+                  background: icon === i ? color + "33" : "var(--surface)",
                   outline: icon === i ? `2px solid ${color}` : "none",
                   outlineOffset: "1px",
                 }}
@@ -118,7 +167,9 @@ export default function HabitList({ habits, userId }: { habits: Habit[]; userId:
             ))}
           </div>
 
-          <p className="text-xs mb-2" style={{ color: "var(--muted)" }}>选择颜色</p>
+          <p className="text-xs mb-2" style={{ color: "var(--muted)" }}>
+            选择颜色
+          </p>
           <div className="flex gap-2.5 mb-5">
             {COLORS.map((c) => (
               <button
@@ -138,28 +189,20 @@ export default function HabitList({ habits, userId }: { habits: Habit[]; userId:
             <button
               onClick={addHabit}
               disabled={saving || !name.trim()}
-              className="flex-1 rounded-xl py-2.5 text-sm font-semibold text-white transition-opacity disabled:opacity-40"
-              style={{ background: "var(--primary)" }}
+              className="flex-1 rounded-xl py-2.5 text-sm font-semibold transition-opacity disabled:opacity-40"
+              style={{ background: "var(--primary)", color: "#0d1320" }}
             >
               {saving ? "保存中…" : "添加"}
             </button>
             <button
               onClick={() => setShowForm(false)}
               className="px-4 rounded-xl py-2.5 text-sm font-medium transition-colors"
-              style={{ background: "#f0ece4", color: "var(--muted)" }}
+              style={{ background: "var(--surface)", color: "var(--muted)" }}
             >
               取消
             </button>
           </div>
         </div>
-      ) : (
-        <button
-          onClick={() => setShowForm(true)}
-          className="w-full rounded-2xl py-3.5 text-sm font-semibold text-white transition-all active:scale-98"
-          style={{ background: "var(--primary)", boxShadow: "0 4px 16px rgba(99,102,241,0.25)" }}
-        >
-          + 添加习惯
-        </button>
       )}
     </div>
   );
